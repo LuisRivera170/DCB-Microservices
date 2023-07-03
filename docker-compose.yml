@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  productdb:
+    container_name: productdb
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: productdb
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - '3306:3306'
+    volumes:
+      - productdb:/var/lib/mysql
+
+volumes:
+  productdb:
+    driver: local
