@@ -3,6 +3,7 @@
 ### Development
 
 
-| Microservice | Port |
-| ----------- | ----------- |
-| Product service | 8080 |
+| Microservice     | Port |
+|------------------|------|
+| Service registry | 8761 |
+| Product service  | 8080 |
