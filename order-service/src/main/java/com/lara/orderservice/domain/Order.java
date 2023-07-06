@@ -1,4 +1,4 @@
-package com.lara.productservice.domain;
+package com.lara.orderservice.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.Instant;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -19,15 +20,16 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    private String name;
-    private Long price;
+    private Long productId;
     private Long quantity;
+    private Instant orderDate;
+    private String orderStatus;
+    private Long amount;
 
 }
-

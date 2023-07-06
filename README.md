@@ -7,3 +7,4 @@
 |------------------|------|
 | Service registry | 8761 |
 | Product service  | 8080 |
+| Order service    | 8081 |

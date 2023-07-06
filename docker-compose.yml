@@ -13,7 +13,21 @@ services:
       - '3306:3306'
     volumes:
       - productdb:/var/lib/mysql
+  orderdb:
+    container_name: orderdb
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: orderdb
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - '3307:3306'
+    volumes:
+      - orderdb:/var/lib/mysql
 
 volumes:
   productdb:
+    driver: local
+  orderdb:
     driver: local
