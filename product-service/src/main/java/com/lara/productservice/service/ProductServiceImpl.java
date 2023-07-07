@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository
                 .findById(id)
                 .orElseThrow(() ->
-                        new ProductServiceCustomException(String.format("Product with given Id %d not found", id), "PRODUCT_NOT_FOUND"));
+                        new ProductServiceCustomException(String.format("Product with given id %d not found", id), "PRODUCT_NOT_FOUND"));
 
         return ProductResponse
                 .builder()
@@ -44,8 +44,25 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         productRepository.save(newProduct);
-        log.info("Product created with Id {}", newProduct.getId());
+        log.info("Product created with id {}", newProduct.getId());
         return newProduct.getId();
+    }
+
+    @Override
+    public void reduceQuantity(Long productId, Long quantity) {
+        log.info("Reducing quantity {} for product with id {}", quantity, productId);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductServiceCustomException(String.format("Product with given id %d not found", productId), "PRODUCT_NOT_FOUND"));
+
+        if (quantity > product.getQuantity()) {
+            throw new ProductServiceCustomException(String.format("Product with given id %d hasn't enough quantity", productId), "NOT_ENOUGH_QUANTITY");
+        }
+
+        product.setQuantity(product.getQuantity() - quantity);
+
+        log.info("Product quantity updated successfully, remaining quantity {} of product with id {}", product.getQuantity(), product.getId());
+        productRepository.save(product);
     }
 
 }
