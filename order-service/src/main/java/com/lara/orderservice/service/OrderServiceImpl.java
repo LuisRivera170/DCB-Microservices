@@ -1,6 +1,7 @@
 package com.lara.orderservice.service;
 
 import com.lara.orderservice.domain.Order;
+import com.lara.orderservice.remote.ProductRemoteService;
 import com.lara.orderservice.repository.OrderRepository;
 import com.lara.orderservice.web.dto.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,15 @@ import static java.time.Instant.now;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductRemoteService productRemoteService;
 
     @Override
     public Long placeOrder(OrderRequest orderRequest) {
         log.info("== Placing a new order ==");
 
-        log.info("Order Request: {}", orderRequest);
+        productRemoteService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
+
+        log.info("Creating order with status CREATED");
         Order order = Order.builder()
                 .amount(orderRequest.getAmount())
                 .orderStatus("CREATED")
