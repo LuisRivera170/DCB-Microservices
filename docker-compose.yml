@@ -26,6 +26,12 @@ services:
     volumes:
       - orderdb:/var/lib/mysql
 
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - '9411:9411'
+
 volumes:
   productdb:
     driver: local
