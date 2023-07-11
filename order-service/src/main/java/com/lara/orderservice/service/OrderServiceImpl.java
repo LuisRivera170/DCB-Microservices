@@ -1,7 +1,7 @@
 package com.lara.orderservice.service;
 
 import com.lara.orderservice.domain.Order;
-import com.lara.orderservice.remote.ProductRemoteService;
+import com.lara.orderservice.remote.service.ProductRemoteService;
 import com.lara.orderservice.repository.OrderRepository;
 import com.lara.orderservice.web.dto.request.OrderRequest;
 import lombok.RequiredArgsConstructor;

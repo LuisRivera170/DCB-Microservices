@@ -1,4 +1,4 @@
-package com.lara.orderservice.remote;
+package com.lara.orderservice.remote.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
