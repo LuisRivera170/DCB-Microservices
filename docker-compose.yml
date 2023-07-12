@@ -26,6 +26,19 @@ services:
     volumes:
       - orderdb:/var/lib/mysql
 
+  paymentdb:
+    container_name: paymentdb
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: paymentdb
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - '3308:3306'
+    volumes:
+      - paymentdb:/var/lib/mysql
+
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
@@ -36,4 +49,6 @@ volumes:
   productdb:
     driver: local
   orderdb:
+    driver: local
+  paymentdb:
     driver: local
