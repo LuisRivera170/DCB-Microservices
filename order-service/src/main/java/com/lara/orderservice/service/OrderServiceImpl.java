@@ -1,11 +1,15 @@
 package com.lara.orderservice.service;
 
 import com.lara.orderservice.domain.Order;
+import com.lara.orderservice.exception.OrderServiceCustomException;
+import com.lara.orderservice.remote.dto.request.PaymentRequest;
+import com.lara.orderservice.remote.service.PaymentRemoteService;
 import com.lara.orderservice.remote.service.ProductRemoteService;
 import com.lara.orderservice.repository.OrderRepository;
 import com.lara.orderservice.web.dto.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import static java.time.Instant.now;
@@ -17,6 +21,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRemoteService productRemoteService;
+    private final PaymentRemoteService paymentRemoteService;
 
     @Override
     public Long placeOrder(OrderRequest orderRequest) {
@@ -35,8 +40,25 @@ public class OrderServiceImpl implements OrderService {
 
         order = orderRepository.save(order);
 
-        log.info("Order placed successfully, Id {}", order.getId());
-        return order.getId();
+        log.info("Calling Payment Service for order {}", order.getId());
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .orderId(order.getId())
+                .mode(orderRequest.getPaymentMode())
+                .amount(orderRequest.getAmount())
+                .build();
+
+        try {
+            paymentRemoteService.doPayment(paymentRequest);
+            order.setOrderStatus("PLACED");
+            orderRepository.save(order);
+            log.info("Order placed successfully, Id {}", order.getId());
+            return order.getId();
+        } catch (Exception e) {
+            log.error("Error occurred in payment {}", e.getMessage());
+            order.setOrderStatus("PAYMENT_FAILED");
+            orderRepository.save(order);
+            throw new OrderServiceCustomException("Error occurred in payment", "PAYMENT_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
     }
 
 }
