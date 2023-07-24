@@ -7,6 +7,7 @@ import com.lara.orderservice.remote.service.PaymentRemoteService;
 import com.lara.orderservice.remote.service.ProductRemoteService;
 import com.lara.orderservice.repository.OrderRepository;
 import com.lara.orderservice.web.dto.request.OrderRequest;
+import com.lara.orderservice.web.dto.response.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,23 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRemoteService productRemoteService;
     private final PaymentRemoteService paymentRemoteService;
+
+
+    @Override
+    public OrderResponse getOrderDetails(Long orderId) {
+        log.info("Getting order details for Order Id: {}", orderId);
+
+        Order order = orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new OrderServiceCustomException("Order not found for Id: " + orderId, "NOT_FOUND", 404));
+
+        return OrderResponse.builder()
+                .orderId(order.getId())
+                .orderStatus(order.getOrderStatus())
+                .orderDate(order.getOrderDate())
+                .amount(order.getAmount())
+                .build();
+    }
 
     @Override
     public Long placeOrder(OrderRequest orderRequest) {
