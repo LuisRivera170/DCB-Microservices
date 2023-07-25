@@ -3,6 +3,7 @@ package com.lara.orderservice.service;
 import com.lara.orderservice.domain.Order;
 import com.lara.orderservice.exception.OrderServiceCustomException;
 import com.lara.orderservice.remote.dto.request.PaymentRequest;
+import com.lara.orderservice.remote.dto.response.ProductResponse;
 import com.lara.orderservice.remote.service.PaymentRemoteService;
 import com.lara.orderservice.remote.service.ProductRemoteService;
 import com.lara.orderservice.repository.OrderRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import static java.time.Instant.now;
 
@@ -23,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRemoteService productRemoteService;
     private final PaymentRemoteService paymentRemoteService;
+    private final RestTemplate restTemplate;
 
 
     @Override
@@ -33,11 +36,18 @@ public class OrderServiceImpl implements OrderService {
                 .findById(orderId)
                 .orElseThrow(() -> new OrderServiceCustomException("Order not found for Id: " + orderId, "NOT_FOUND", 404));
 
+        ProductResponse productResponse = null;
+
+        if (order.getProductId() != null) {
+            productResponse = restTemplate.getForObject("http://product-service/api/products/" + order.getProductId(), ProductResponse.class);
+        }
+
         return OrderResponse.builder()
                 .orderId(order.getId())
                 .orderStatus(order.getOrderStatus())
                 .orderDate(order.getOrderDate())
                 .amount(order.getAmount())
+                .product(productResponse)
                 .build();
     }
 

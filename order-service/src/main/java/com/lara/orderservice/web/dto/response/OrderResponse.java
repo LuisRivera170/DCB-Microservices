@@ -1,5 +1,6 @@
 package com.lara.orderservice.web.dto.response;
 
+import com.lara.orderservice.remote.dto.response.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class OrderResponse {
     private Instant orderDate;
     private String orderStatus;
     private Long amount;
-    //private ProductResponse product;
+    private ProductResponse product;
     //private PaymentResponse payment;
 
 }
