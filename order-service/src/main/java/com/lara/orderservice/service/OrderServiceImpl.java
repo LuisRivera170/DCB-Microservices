@@ -3,6 +3,7 @@ package com.lara.orderservice.service;
 import com.lara.orderservice.domain.Order;
 import com.lara.orderservice.exception.OrderServiceCustomException;
 import com.lara.orderservice.remote.dto.request.PaymentRequest;
+import com.lara.orderservice.remote.dto.response.PaymentResponse;
 import com.lara.orderservice.remote.dto.response.ProductResponse;
 import com.lara.orderservice.remote.service.PaymentRemoteService;
 import com.lara.orderservice.remote.service.ProductRemoteService;
@@ -14,6 +15,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 import static java.time.Instant.now;
 
@@ -37,9 +40,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new OrderServiceCustomException("Order not found for Id: " + orderId, "NOT_FOUND", 404));
 
         ProductResponse productResponse = null;
+        PaymentResponse paymentResponse = null;
 
         if (order.getProductId() != null) {
             productResponse = restTemplate.getForObject("http://product-service/api/products/" + order.getProductId(), ProductResponse.class);
+            paymentResponse = restTemplate.getForObject("http://payment-service/api/payments/order/" + order.getId(), PaymentResponse.class);
         }
 
         return OrderResponse.builder()
@@ -48,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderDate(order.getOrderDate())
                 .amount(order.getAmount())
                 .product(productResponse)
+                .payment(paymentResponse)
                 .build();
     }
 
@@ -73,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderId(order.getId())
                 .mode(orderRequest.getPaymentMode())
                 .amount(orderRequest.getAmount())
+                .referenceNumber(UUID.randomUUID().toString())
                 .build();
 
         try {
