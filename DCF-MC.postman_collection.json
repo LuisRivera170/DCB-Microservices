@@ -24,12 +24,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/products",
-							"protocol": "http",
+							"raw": "{{PRODUCT_SERVICE_BASE_URL}}/api/products",
 							"host": [
-								"localhost"
+								"{{PRODUCT_SERVICE_BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products"
@@ -44,22 +42,230 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products/2",
-							"protocol": "http",
+							"raw": "{{PRODUCT_SERVICE_BASE_URL}}/api/products/1",
 							"host": [
-								"localhost"
+								"{{PRODUCT_SERVICE_BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products",
-								"2"
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reducing quantity of a given product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{PRODUCT_SERVICE_BASE_URL}}/api/products/reduce-quantity/1?quantity=10",
+							"host": [
+								"{{PRODUCT_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"reduce-quantity",
+								"1"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "10"
+								}
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Order service",
+			"item": [
+				{
+					"name": "Place order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": 1,\r\n    \"amount\": 12000,\r\n    \"quantity\": 1,\r\n    \"paymentMode\": \"CASH\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ORDER_SERVICE_BASE_URL}}/api/orders",
+							"host": [
+								"{{ORDER_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ORDER_SERVICE_BASE_URL}}/api/orders/6",
+							"host": [
+								"{{ORDER_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order details (GATEWAY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{GATEWAY_SERVICE_BASE_URL}}/api/orders/6",
+							"host": [
+								"{{GATEWAY_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place order (GATEWAY)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": 1,\r\n    \"amount\": 12000,\r\n    \"quantity\": 1,\r\n    \"paymentMode\": \"CASH\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{GATEWAY_SERVICE_BASE_URL}}/api/orders",
+							"host": [
+								"{{GATEWAY_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment service",
+			"item": [
+				{
+					"name": "Get Payment details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PAYMENT_SERVICE_BASE_URL}}/api/payments/order/4",
+							"host": [
+								"{{PAYMENT_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"order",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment details (GATEWAY)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{GATEWAY_SERVICE_BASE_URL}}/api/payments/order/6",
+							"host": [
+								"{{GATEWAY_SERVICE_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"order",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "GATEWAY_SERVICE_BASE_URL",
+			"value": "http://localhost:9090",
+			"type": "string"
+		},
+		{
+			"key": "PRODUCT_SERVICE_BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "ORDER_SERVICE_BASE_URL",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "PAYMENT_SERVICE_BASE_URL",
+			"value": "http://localhost:8082",
+			"type": "string"
 		}
 	]
 }

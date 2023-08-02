@@ -4,13 +4,14 @@
 
 ### Microservices connections
 
-| Microservice     | Port |
-|------------------|------|
-| Service registry | 8761 |
-| Config service   | 9296 |
-| Product service  | 8080 |
-| Order service    | 8081 |
-| Payment service  | 8082 |
+| Microservice      | Port |
+|-------------------|------|
+| Gateway service   | 9090 |
+| Service registry  | 8761 |
+| Config service    | 9296 |
+| Product service   | 8080 |
+| Order service     | 8081 |
+| Payment service   | 8082 |
 
 ### Resources connections
 
